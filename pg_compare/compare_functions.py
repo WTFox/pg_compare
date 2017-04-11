@@ -66,7 +66,7 @@ def pgcompare_tables():
     for table in config.truth_db.tables:
         if table not in config.test_db.tables:
             success = False
-            error_report.log('Table', 'Table: {} is not in test db.'.format(table.name))
+            error_report.log('Table', 'table {} is not in test db.'.format(table.name))
 
     return success
 
@@ -105,8 +105,8 @@ def pgcompare_columns():
         if truth_columns != test_columns:
             success = False
             for missing_col in truth_columns ^ test_columns:
-                message = 'Col {} does not exist in test db.'
-                error_report.log('Column', message.format(missing_col))
+                message = 'Column {} does not exist for table {} in test db.'
+                error_report.log('Column', message.format(missing_col, table.name))
 
     return success
 
@@ -135,16 +135,28 @@ def pgcompare_pks():
     """
     success = True
     for table in config.truth_db.tables:
+        if not table.primary_key:
+            continue
+
         test_table = config.test_db.get_table_by_name(table.name)
 
-        if not hasattr(table, 'name') or not hasattr(table, 'primary_key'):
+        invalid = False
+        required_attrs = ['primary_key', 'primary_key_type']
+        for attr in required_attrs:
+            if not getattr(table, attr, None):
+                invalid = True
+            if not getattr(test_table, attr, None):
+                invalid = True
+
+        if invalid or not test_table:
+            success = False
+            message = 'Table {} is not in test database'.format(table.name)
+            error_report.log('Table', message)
             continue
 
-        if not hasattr(test_table, 'name') or not hasattr(test_table, 'primary_key'):
-            continue
-
-        if not table.primary_key and not test_table.primary_key:
-            continue
+        should_compare_max = False
+        if table.primary_key_type == 'integer':
+            should_compare_max = True
 
         if table.primary_key != test_table.primary_key:
             success = False
@@ -156,16 +168,21 @@ def pgcompare_pks():
             message = 'PK type {} in {} does not match pk type in test db, {}'
             error_report.log('PK', message.format(table.primary_key, table.name, test_table.primary_key))
 
-        with config.truth_db.executor(MAX_PK_SELECT % (table.primary_key, table.name)) as truth_result:
-            max_pk = truth_result.fetchone()
+        if should_compare_max:
+            with config.truth_db.executor(MAX_PK_SELECT % (table.primary_key, table.name)) as truth_result:
+                max_pk = truth_result.fetchone()
+                if max_pk:
+                    max_pk = max_pk[0]
 
-        with config.test_db.executor(MAX_PK_SELECT % (test_table.primary_key, test_table.name)) as test_result:
-            max_test_pk = test_result.fetchone()
+            with config.test_db.executor(MAX_PK_SELECT % (test_table.primary_key, test_table.name)) as test_result:
+                max_test_pk = test_result.fetchone()
+                if max_test_pk:
+                    max_test_pk = max_test_pk[0]
 
-        if not all([max_pk, max_test_pk]) or max_pk != max_test_pk:
-            success = False
-            message = 'Max PK {} in {} does not match max pk type in test db, {}'
-            error_report.log('PK', message.format(max_pk, table.name, max_test_pk))
+            if max_pk != max_test_pk:
+                success = False
+                message = 'Max PK {} in {} does not match max pk type in test db, {}'
+                error_report.log('PK', message.format(max_pk, table.name, max_test_pk))
 
     return success
 
