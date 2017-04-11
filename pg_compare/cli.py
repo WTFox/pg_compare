@@ -19,21 +19,16 @@ from .utils import initialize
 config.available_tests = compare_functions.available_tests()
 
 
-@click.group()
-def cli():
-    return
-
-
-@cli.command()
-@click.option('-t', '--total', help='Examine all items.', is_flag=True)
-@click.option('-s', '--select', type=click.Choice(config.available_tests), multiple=True)
-@click.option('-o', '--outfile', help="File to use as csv report")
-def diff(total, select, outfile):
+@click.command()
+@click.option('-a', '--all', help='Run all comparisons.', is_flag=True)
+@click.option('-s', '--select', help="Select specific comparisons to run.", type=click.Choice(config.available_tests), multiple=True)
+@click.option('-o', '--outfile', help="Specify a csv file to be created for failed comparisons.", type=click.Path())
+def cli(all, select, outfile):
     initialize()
     if outfile:
         config.outfile = outfile
 
-    if total:
+    if all:
         compare_functions.run(config.available_tests)
         return
 
