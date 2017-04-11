@@ -22,16 +22,84 @@ Installing
 To run it
 ~~~~~~~~~
 
-``pg-compare --help``
+::
+
+    pg-compare --help
+    Usage: pg-compare [OPTIONS]
+
+    Options:
+      -a, --all                       Run all comparisons.
+      -s, --select [catalogs|columns|indexes|pks|rowcounts|tables]
+                                      Select specific comparisons to run.
+      -o, --outfile TEXT              Specify a csv file to be created for failed
+                                      comparisons.
+      --help                          Show this message and exit.
+
+
+::
+
+    pg-compare --all
+    ********************************************************************************
+                            === PG-COMPARE ===
+
+    This is used to compare two databases. Takes two connection strings. One it
+    considers truth and another to test against it. Used to determine the difference
+    in two databases.
+
+    ********************************************************************************
+    Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
+    Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
+    Retrieving details for all tables. This could take awhile... OK
+    Comparing catalogs... OK
+    Comparing columns... OK
+    Comparing indexes... OK
+    Comparing pks... FAIL
+    Comparing rowcounts... OK
+    Comparing tables... OK
+
+::
+
+    pg-compare -s catalogs -s columns
+    ********************************************************************************
+                            === PG-COMPARE ===
+
+    This is used to compare two databases. Takes two connection strings. One it
+    considers truth and another to test against it. Used to determine the difference
+    in two databases.
+
+    ********************************************************************************
+    Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
+    Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
+    Retrieving details for all tables. This could take awhile... OK
+    Comparing catalogs... OK
+    Comparing columns... OK
+
+::
+
+    pg-compare -s catalogs -s columns -o "path/to/file.csv"
+    ********************************************************************************
+                            === PG-COMPARE ===
+
+    This is used to compare two databases. Takes two connection strings. One it
+    considers truth and another to test against it. Used to determine the difference
+    in two databases.
+
+    ********************************************************************************
+    Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
+    Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
+    Retrieving details for all tables. This could take awhile... OK
+    Comparing catalogs... OK
+    Comparing columns... FAIL
+    Building report... OK
 
 Built With
-~~~~~~~~~
+~~~~~~~~~~
 
--  `click`_ - The web framework used
--  `psycopg2`_ - Dependency Management
+-  `click`_ - The cli framework used
+-  `psycopg2`_ - For postgres
 
 Authors
-~~~~~~~~~
+~~~~~~~
 
 -  **Anthony Fox** - *Initial work* - `wtfox`_
 
