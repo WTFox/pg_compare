@@ -25,20 +25,15 @@ To run it
 ``pg-compare --help``
 
 Built With
-----------
+~~~~~~~~~
 
 -  `click`_ - The web framework used
 -  `psycopg2`_ - Dependency Management
 
 Authors
--------
+----------
 
 -  **Anthony Fox** - *Initial work* - `wtfox`_
-
-Todos
------
-
--  [ ] Add tests!!! :(
 
 .. _click: http://www.dropwizard.io/1.0.2/docs/
 .. _psycopg2: https://maven.apache.org/
