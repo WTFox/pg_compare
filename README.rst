@@ -31,7 +31,7 @@ Built With
 -  `psycopg2`_ - Dependency Management
 
 Authors
-----------
+~~~~~~~~~
 
 -  **Anthony Fox** - *Initial work* - `wtfox`_
 
