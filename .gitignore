@@ -1,0 +1,10 @@
+/.venv
+*.pyc
+__pycache__/
+.cache
+pg_compare.egg-info/
+*.swp
+docs/_build
+dist
+build
+.DS_Store
