@@ -50,15 +50,29 @@ def print_welcome_text():
     click.echo(output)
 
 
+def check_for_connection_strings():
+    """ Checks to see if the user passed in connection strings.
+    Prompts for connection strings if they do not exist.
+    """
+    truth_conn_str = config.truth_db_conn_string
+    test_conn_str = config.test_db_conn_string
+    if not all([truth_conn_str, test_conn_str]):
+        prompt_for_conn_strings()
+
+
 def prompt_for_conn_strings():
-    config.truth_db_conn_string = click.prompt("Truth connection string")
-    config.test_db_conn_string = click.prompt("Test connection string")
+    """ Prompts user to put in connection strings. """
+    click.echo("Please input the needed connection strings. Without surrounding quotes.")
+    config.truth_db_conn_string = click.prompt("Database to consider TRUTH: ")
+    config.test_db_conn_string = click.prompt("Database to consider TEST: ")
     return
 
 
 def load_table_details_for_both_dbs(*databases):
+    """ Load all needed data from both databases into memory. """
     for db in databases:
         db.get_details_for_tables()
+
     return
 
 

@@ -46,10 +46,12 @@ class ErrorReport(object):
 
     @staticmethod
     def _create_file(filename):
-        # Ignore stdout
-        if filename == '-':
-            return
+        """ Creates the file if it doesn't exist already.
+        Ignores stdout if a - is passed in.
+        """
+        if filename and filename != '-':
+            if not os.path.exists(os.path.dirname(filename)):
+                os.makedirs(os.path.dirname(filename))
 
-        if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
+        return
 

@@ -21,7 +21,6 @@ Table = namedtuple("Table", "name rowcount columns primary_key primary_key_type"
 
 
 class PGDetails(object):
-
     def __init__(self, conn_string):
         self.conn_string = conn_string
         self.conn = None
@@ -47,14 +46,27 @@ class PGDetails(object):
         self._close_all()
 
     def get_table_by_name(self, name):
+        """ Given a table name found in truth, attempt to
+        return that same table in test. If no table is
+        found by that name, return None.
+        """
+        table_name = None
         if self._table_details:
             try:
                 table_name = [x for x in self._table_details if x.name == name][0]
             except IndexError:
-                table_name = None
+                pass
+
         return table_name
 
     def get_details_for_tables(self):
+        """ Load all needed data into memory for comparisons.
+
+        Retrieves:
+            - Rowcounts
+            - Columns per table
+            - PK and PK type per table (if exists)
+        """
         _tables = []
         cursor = self._get_cursor()
         for table_name in self._table_names:
