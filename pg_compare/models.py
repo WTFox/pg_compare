@@ -31,14 +31,17 @@ class PGDetails(object):
 
     @property
     def catalog(self):
+        """ The catalog of the database. """
         return self._catalog
 
     @property
     def tables(self):
+        """ All table names. """
         return self._table_details if self._table_details else self._table_names
 
     @contextmanager
     def executor(self, statement):
+        """ Context manager to execute sql statements """
         _cur = self._get_cursor()
         _cur.execute(statement)
         results = _cur
@@ -86,20 +89,28 @@ class PGDetails(object):
         self._table_details = _tables
 
     def _build_catalog(self):
+        """ Get the catalog of the database. """
         resultset = []
         with self.executor(SELECT_CATALOG) as result:
             resultset = result.fetchall()
         return resultset
 
     def _get_conn(self):
+        """ Returns psycopg2 connection. _get_cursor() should
+        be used instead.
+        """
         return psycopg2.connect(self.conn_string)
 
     def _get_cursor(self):
+        """ Get the psycopg2 connection and return the cursor
+        object.
+        """
         if not self.conn:
             self.conn = self._get_conn()
         return self.conn.cursor()
 
     def _close_all(self):
+        """ Closes current cursor and conn objects. """
         if self.cur:
             self.cur.close()
             self.cur = None

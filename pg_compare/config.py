@@ -12,6 +12,9 @@ databases are the same.
 
 
 class AttributeContainer(dict):
+    """ Simple attr container to hold various bits of information
+    we'll need throughout the app.
+    """
     def __getattr__(self, attr):
         return self[attr]
 

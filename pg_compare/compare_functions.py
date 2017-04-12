@@ -23,6 +23,10 @@ error_report = ErrorReport()
 
 
 def available_tests():
+    """ Looks at all functions in this compare_functions.py and
+    returns a list of all available test functions. Those being
+    all functions that start with 'pgcompare_'
+    """
     test_funcs = []
     funcs = inspect.getmembers(sys.modules[__name__], inspect.isfunction)
     for f_name, f_pointer in funcs:
@@ -33,6 +37,12 @@ def available_tests():
 
 
 def run(test_names):
+    """" Given a list of test shortnames (ex: ['tables', 'rowcounts']),
+    find and execute the functions that correspond.
+
+    if ['rowcounts'] is passed, then pgcompare_rowcounts() will be
+    triggered.
+    """
     funcs = dict(inspect.getmembers(sys.modules[__name__], inspect.isfunction))
     for test_name in test_names:
         click.echo("Comparing {}... ".format(test_name), nl="")

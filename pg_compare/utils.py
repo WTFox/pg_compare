@@ -41,6 +41,7 @@ def initialize():
 
 
 def print_welcome_text():
+    """ Outputs welcome text """
     output = click.style('*' * 80, fg="cyan")
     output += '\n\t\t\t'
     output += click.style("=== PG-COMPARE ===\n\n", fg="yellow", bold=True)

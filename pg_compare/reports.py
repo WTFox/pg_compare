@@ -21,16 +21,24 @@ ErrorRecord = namedtuple('Error', 'type message')
 
 
 class ErrorReport(object):
+    """ Object to keep track of errors occurred during the comparisons
+    and build the end report, if needed.
+    """
     def __init__(self):
         self.errors = []
 
     def clear(self):
+        """ Clean out all errors. """
         self.errors = []
 
     def log(self, type, message):
+        """ Log a new error. """
         self.errors.append(ErrorRecord(type, message))
 
     def build_report(self):
+        """ Triggers the report to be compiled and create the file
+        if needed.
+        """
         if len(self.errors) and config.outfile:
             click.echo("Building report...", nl="")
             self._create_file(config.outfile)
@@ -38,6 +46,7 @@ class ErrorReport(object):
             click.secho("OK", fg="green")
 
     def _compile_report(self):
+        """ Builds the report csv. """
         with click.open_file(config.outfile, "w") as f:
             csvwriter = csv.writer(f)
             csvwriter.writerow(['index', 'type', 'message'])
