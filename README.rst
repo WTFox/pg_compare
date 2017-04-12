@@ -96,12 +96,27 @@ To run it
     Comparing columns... FAIL
     Building report... OK
 
+Additional Options
+~~~~~~~~~~~~~~~~~~
+You can specify additional environment variables to modify the behavior of pg-compare.
+
+To disable the spinner (disabled by default on windows)
+::
+
+    PG_NO_SPIN="false"
+
+To disable async threading
+::
+
+    PG_NO_SPIN="true"
+
+
 Built With
 ~~~~~~~~~~
 
 -  `click`_ - The cli framework used
 -  `psycopg2`_ - For postgres
--  `colorama` - For colors
+-  `colorama`_ - For colors
 
 Authors
 ~~~~~~~
@@ -111,3 +126,4 @@ Authors
 .. _click: http://www.dropwizard.io/1.0.2/docs/
 .. _psycopg2: https://maven.apache.org/
 .. _wtfox: https://github.com/wtfox
+.. _colorama: https://pypi.python.org/pypi/colorama
