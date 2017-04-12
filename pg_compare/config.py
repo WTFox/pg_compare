@@ -21,6 +21,9 @@ class AttributeContainer(dict):
 
 
 config = AttributeContainer()
+
+config.truth_db_conn_string = None
+config.test_db_conn_string = None
 config.truth_db = None
 config.test_db = None
 config.outfile = None

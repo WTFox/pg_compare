@@ -25,8 +25,9 @@ in two databases.
 
 
 def initialize():
+    """ Initial processing before the comparisons begin. """
     print_welcome_text()
-    prompt_for_conn_strings()
+    check_for_connection_strings()
 
     config.truth_db = PGDetails(config.truth_db_conn_string)
     config.test_db = PGDetails(config.test_db_conn_string)

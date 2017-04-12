@@ -20,21 +20,27 @@ config.available_tests = compare_functions.available_tests()
 
 
 @click.command()
-@click.option('-a', '--all', help='Run all comparisons.', is_flag=True)
-@click.option('-s', '--select', help="Select specific comparisons to run.", type=click.Choice(config.available_tests), multiple=True)
-@click.option('-o', '--outfile', help="Specify a csv file to be created for failed comparisons.", type=click.Path())
-def cli(all, select, outfile):
+@click.option('-a', '--truthdb',
+              help='Connection string for database to consider truth.')
+@click.option('-b', '--testdb',
+              help='Connection string for database to test.')
+@click.option('-e', '--everything', is_flag=True,
+              help='Run all comparisons.')
+@click.option('-s', '--select', type=click.Choice(config.available_tests), multiple=True,
+              help="Select specific comparisons to run.")
+@click.option('-o', '--outfile', type=click.Path(writable=True, dir_okay=False),
+              help="Specify a csv file to be created for failed comparisons.")
+def cli(truthdb, testdb, everything, select, outfile):
+    """ Entry-point for script. """
+    config.truth_db_conn_string = truthdb
+    config.test_db_conn_string = testdb
+    config.outfile = outfile
+
     initialize()
-    if outfile:
-        config.outfile = outfile
-
-    if all:
-        compare_functions.run(config.available_tests)
-        return
-
     if select:
         compare_functions.run(select)
-        return
+    else:
+        compare_functions.run(config.available_tests)
 
     return
 
