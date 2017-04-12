@@ -24,21 +24,27 @@ To run it
 
 ::
 
-    pg-compare --help
+    (pg-compare) ➜  pg_compare git:(master) pg-compare --help
     Usage: pg-compare [OPTIONS]
 
+      This is used to compare two databases. Takes two connection strings. One
+      it considers truth and another to test against it. Used to determine the
+      difference in two databases.
+
     Options:
-      -a, --all                       Run all comparisons.
+      -a, --truthdb TEXT              Connection string for database to consider
+                                      truth.
+      -b, --testdb TEXT               Connection string for database to test.
+      -e, --everything                Run all comparisons.
       -s, --select [catalogs|columns|indexes|pks|rowcounts|tables]
                                       Select specific comparisons to run.
-      -o, --outfile TEXT              Specify a csv file to be created for failed
+      -o, --outfile PATH              Specify a csv file to be created for failed
                                       comparisons.
       --help                          Show this message and exit.
 
-
 ::
 
-    pg-compare --all
+    pg-compare -a "host='scranton1' dbname='manager_db' user='mscott' password='improv1!'" -b "host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'"
     ********************************************************************************
                             === PG-COMPARE ===
 
@@ -47,8 +53,6 @@ To run it
     in two databases.
 
     ********************************************************************************
-    Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
-    Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
     Retrieving details for all tables. This could take awhile... OK
     Comparing catalogs... OK
     Comparing columns... OK
@@ -97,6 +101,7 @@ Built With
 
 -  `click`_ - The cli framework used
 -  `psycopg2`_ - For postgres
+-  `colorama` - For colors
 
 Authors
 ~~~~~~~
