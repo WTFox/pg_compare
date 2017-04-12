@@ -31,7 +31,10 @@ config.available_tests = compare_functions.available_tests()
 @click.option('-o', '--outfile', type=click.Path(writable=True, dir_okay=False),
               help="Specify a csv file to be created for failed comparisons.")
 def cli(truthdb, testdb, everything, select, outfile):
-    """ Entry-point for script. """
+    """ This is used to compare two databases. Takes two connection strings. One it
+    considers truth and another to test against it. Used to determine the difference
+    in two databases.
+    """
     config.truth_db_conn_string = truthdb
     config.test_db_conn_string = testdb
     config.outfile = outfile

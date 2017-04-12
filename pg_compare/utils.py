@@ -32,7 +32,8 @@ def initialize():
     config.truth_db = PGDetails(config.truth_db_conn_string)
     config.test_db = PGDetails(config.test_db_conn_string)
 
-    click.secho("Retrieving details for all tables. This could take awhile... ", fg="yellow", nl="")
+    message = "Retrieving details for all tables. This could take awhile... "
+    click.secho(message, fg="yellow", nl="")
     with blindspin.spinner():
         load_table_details_for_both_dbs(config.truth_db, config.test_db)
 
@@ -49,6 +50,7 @@ def print_welcome_text():
     output += '\n'
     output += click.style('*' * 80, fg="cyan")
     click.echo(output)
+    return
 
 
 def check_for_connection_strings():
@@ -59,6 +61,8 @@ def check_for_connection_strings():
     test_conn_str = config.test_db_conn_string
     if not all([truth_conn_str, test_conn_str]):
         prompt_for_conn_strings()
+
+    return
 
 
 def prompt_for_conn_strings():
@@ -75,5 +79,3 @@ def load_table_details_for_both_dbs(*databases):
         db.get_details_for_tables()
 
     return
-
-

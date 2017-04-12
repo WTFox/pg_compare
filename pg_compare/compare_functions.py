@@ -40,15 +40,18 @@ def run(test_names):
     """" Given a list of test shortnames (ex: ['tables', 'rowcounts']),
     find and execute the functions that correspond.
 
-    if ['rowcounts'] is passed, then pgcompare_rowcounts() will be
-    triggered.
+    if ['rowcounts'] is passed,
+        pgcompare_rowcounts() will be triggered.
+
+    if ['rowcounts', 'pks'] is passed,
+        pgcompare_rowcounts() and
+        pgcompare_pks will be triggered.
     """
     funcs = dict(inspect.getmembers(sys.modules[__name__], inspect.isfunction))
     for test_name in test_names:
         click.echo("Comparing {}... ".format(test_name), nl="")
 
         func_name = "pgcompare_{}".format(test_name)
-
         if funcs.get(func_name)():
             click.secho("OK", fg="green")
         else:
@@ -70,7 +73,7 @@ def pgcompare_catalogs():
 
 
 def pgcompare_tables():
-    """ Do all the tables in truth exist in test (hint: look at pg_catalog.pg_tables)?
+    """ Do all the tables in truth exist in test
     """
     success = True
     for table in config.truth_db.tables:
@@ -122,7 +125,8 @@ def pgcompare_columns():
 
 
 def pgcompare_indexes():
-    """ For every index in truth, does the index exist in test (pg_catalog.pg_indexes)
+    """ For every index in truth, does the index exist in test
+    (pg_catalog.pg_indexes)
     """
     success = True
     with config.truth_db.executor(INDEXNAME_SELECT) as truth_result:
@@ -141,7 +145,8 @@ def pgcompare_indexes():
 
 
 def pgcompare_pks():
-    """ For the primary key column in each table, if it's an int does the max of it on truth = max on test?
+    """ For the primary key column in each table, if it's an int does
+    the max of it on truth = max on test?
     """
     success = True
     for table in config.truth_db.tables:

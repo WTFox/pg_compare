@@ -26,14 +26,17 @@ class ErrorReport(object):
     """
     def __init__(self):
         self.errors = []
+        return
 
     def clear(self):
         """ Clean out all errors. """
         self.errors = []
+        return
 
-    def log(self, type, message):
+    def log(self, category, message):
         """ Log a new error. """
-        self.errors.append(ErrorRecord(type, message))
+        self.errors.append(ErrorRecord(category, message))
+        return
 
     def build_report(self):
         """ Triggers the report to be compiled and create the file
@@ -45,13 +48,17 @@ class ErrorReport(object):
             self._compile_report()
             click.secho("OK", fg="green")
 
+        return
+
     def _compile_report(self):
         """ Builds the report csv. """
         with click.open_file(config.outfile, "w") as f:
-            csvwriter = csv.writer(f)
-            csvwriter.writerow(['index', 'type', 'message'])
+            csv_writer = csv.writer(f)
+            csv_writer.writerow(['index', 'type', 'message'])
             for idx, error in enumerate(self.errors):
-                csvwriter.writerow([idx, error.type, error.message])
+                csv_writer.writerow([idx, error.type, error.message])
+
+        return
 
     @staticmethod
     def _create_file(filename):
