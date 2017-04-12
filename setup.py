@@ -33,6 +33,7 @@ if sys.argv[-1] == "publish":
 required = [
     'Click',
     'psycopg2',
+    'colorama',
 ]
 
 setup(

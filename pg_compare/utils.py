@@ -9,13 +9,15 @@ This is used to compare two databases. Takes two connection strings. One it
 considers truth and another to test against it. Used to determine the difference
 in two databases.
 """
+import contextlib
 import threading
 
 import click
 
 from . import config
+from .environments import PG_NO_SPIN, PG_NO_ASYNC
 from .models import PGDetails
-from .vendor import blindspin
+from .vendor.blindspin import spinner
 
 
 TITLE_TEXT = """\
@@ -23,6 +25,12 @@ This is used to compare two databases. Takes two connection strings. One it
 considers truth and another to test against it. Used to determine the difference
 in two databases.
 """
+
+
+if PG_NO_SPIN:
+    @contextlib.contextmanager
+    def spinner():
+        yield
 
 
 def initialize():
@@ -35,7 +43,7 @@ def initialize():
 
     message = "Retrieving details for all tables. This could take awhile... "
     click.secho(message, fg="yellow", nl="")
-    with blindspin.spinner():
+    with spinner():
         load_table_details_for_both_dbs(config.truth_db, config.test_db)
 
     click.secho("OK", fg="green")
@@ -76,15 +84,18 @@ def prompt_for_conn_strings():
 
 def load_table_details_for_both_dbs(*databases):
     """ Load all needed data from both databases into memory. """
-    threads = []
-    for db in databases:
-        process = threading.Thread(target=db.get_details_for_tables)
-        process.start()
-        threads.append(process)
 
-    # We now pause execution on the main thread by 'joining' all of our started threads.
-    # This ensures that each has finished processing the urls.
-    for process in threads:
-        process.join()
+    if PG_NO_ASYNC:
+        for db in databases:
+            db.get_details_for_tables()
+    else:
+        threads = []
+        for db in databases:
+            process = threading.Thread(target=db.get_details_for_tables)
+            process.start()
+            threads.append(process)
+
+        for process in threads:
+            process.join()
 
     return
