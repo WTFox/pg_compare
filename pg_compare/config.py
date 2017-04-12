@@ -9,22 +9,10 @@ considers truth and another to test against it. Used to determine that both
 databases are the same.
 
 """
-
-
-class AttributeContainer(dict):
-    """ Simple attr container to hold various bits of information
-    we'll need throughout the app.
-    """
-    def __getattr__(self, attr):
-        return self[attr]
-
-    def __setattr__(self, attr, value):
-        self[attr] = value
-        return
+from models import AttributeContainer
 
 
 config = AttributeContainer()
-
 config.truth_db_conn_string = None
 config.test_db_conn_string = None
 config.truth_db = None

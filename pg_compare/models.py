@@ -119,6 +119,18 @@ class PGDetails(object):
             self.conn = None
 
 
+class AttributeContainer(dict):
+    """ Simple attr container to hold various bits of information
+    we'll need throughout the app.
+    """
+    def __getattr__(self, attr):
+        return self[attr]
+
+    def __setattr__(self, attr, value):
+        self[attr] = value
+        return
+
+
 if __name__ == '__main__':
     pass
 
