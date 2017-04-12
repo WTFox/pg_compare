@@ -9,6 +9,7 @@ This is used to compare two databases. Takes two connection strings. One it
 considers truth and another to test against it. Used to determine the difference
 in two databases.
 """
+import threading
 
 import click
 
@@ -75,7 +76,15 @@ def prompt_for_conn_strings():
 
 def load_table_details_for_both_dbs(*databases):
     """ Load all needed data from both databases into memory. """
+    threads = []
     for db in databases:
-        db.get_details_for_tables()
+        process = threading.Thread(target=db.get_details_for_tables)
+        process.start()
+        threads.append(process)
+
+    # We now pause execution on the main thread by 'joining' all of our started threads.
+    # This ensures that each has finished processing the urls.
+    for process in threads:
+        process.join()
 
     return
