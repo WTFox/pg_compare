@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 
 | '_ \ / _` |_____ / __/ _ \| '_ ` _ \| '_ \ / _` | '__/ _ \
@@ -9,12 +10,13 @@ This is used to compare two databases. Takes two connection strings. One it
 considers truth and another to test against it. Used to determine the difference
 in two databases.
 """
+
 import contextlib
 import sys
 import threading
 
 import click
-from psycopg2 import ProgrammingError, OperationalError
+from psycopg2 import ProgrammingError
 from psycopg2.extensions import parse_dsn
 
 from . import config
@@ -91,6 +93,22 @@ def print_welcome_text():
     output += '\n'
     output += click.style('*' * 80, fg="cyan")
     click.echo(output)
+
+    print_info_about_databases()
+    return
+
+
+def print_info_about_databases():
+    """ Show the connection details of truth and test database """
+    from tabulate import tabulate
+
+    output = []
+    for k, v in config.truth_db_config.items():
+        output.append((k, v, config.test_db_config[k]))
+
+    click.echo('\n')
+    click.echo(tabulate(output, headers=['', 'Truth Database', 'Test Database'], tablefmt="simple"))
+    click.echo('\n')
     return
 
 
