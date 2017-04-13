@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 | '_ \ / _` |_____ / __/ _ \| '_ ` _ \| '_ \ / _` | '__/ _ \
 | |_) | (_| |_____| (_| (_) | | | | | | |_) | (_| | | |  __/
@@ -9,7 +10,6 @@ considers truth and another to test against it. Used to determine that both
 databases are the same.
 
 """
-import sys
 from collections import namedtuple
 from contextlib import contextmanager
 
@@ -101,7 +101,6 @@ class PGDetails(object):
         be used instead.
         """
         return psycopg2.connect(**self.conn_kwargs)
-
 
     def _get_cursor(self):
         """ Get the psycopg2 connection and return the cursor
