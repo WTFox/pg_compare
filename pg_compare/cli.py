@@ -13,7 +13,7 @@ import click
 
 import compare_functions
 from . import config
-from .utils import initialize
+from .utils import initialize, prompt_for_conn_strings, transform_conn_string
 
 
 config.available_tests = compare_functions.available_tests()
@@ -35,9 +35,12 @@ def cli(truthdb, testdb, everything, select, outfile):
     considers truth and another to test against it. Used to determine the difference
     in two databases.
     """
-    config.truth_db_conn_string = truthdb
-    config.test_db_conn_string = testdb
     config.outfile = outfile
+    if not all([truthdb, testdb]):
+        prompt_for_conn_strings()
+
+    config.truth_db_config = transform_conn_string(truthdb)
+    config.test_db_config = transform_conn_string(testdb)
 
     initialize()
     if select:
