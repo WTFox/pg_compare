@@ -117,6 +117,7 @@ Built With
 -  `click`_ - The cli framework used
 -  `psycopg2`_ - For postgres
 -  `colorama`_ - For colors
+-  `python-tabulate`_ - For tables
 
 Authors
 ~~~~~~~
@@ -127,3 +128,4 @@ Authors
 .. _psycopg2: https://maven.apache.org/
 .. _wtfox: https://github.com/wtfox
 .. _colorama: https://pypi.python.org/pypi/colorama
+.. _tabulate: https://github.com/gregbanks/python-tabulate
