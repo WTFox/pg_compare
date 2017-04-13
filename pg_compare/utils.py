@@ -10,9 +10,12 @@ considers truth and another to test against it. Used to determine the difference
 in two databases.
 """
 import contextlib
+import sys
 import threading
 
 import click
+from psycopg2 import ProgrammingError, OperationalError
+from psycopg2.extensions import parse_dsn
 
 from . import config
 from .environments import PG_NO_SPIN, PG_NO_ASYNC
@@ -36,10 +39,9 @@ if PG_NO_SPIN:
 def initialize():
     """ Initial processing before the comparisons begin. """
     print_welcome_text()
-    check_for_connection_strings()
 
-    config.truth_db = PGDetails(config.truth_db_conn_string)
-    config.test_db = PGDetails(config.test_db_conn_string)
+    config.truth_db = PGDetails(**config.truth_db_config)
+    config.test_db = PGDetails(**config.test_db_config)
 
     message = "Retrieving details for all tables. This could take awhile... "
     click.secho(message, fg="yellow", nl="")
@@ -47,6 +49,36 @@ def initialize():
         load_table_details_for_both_dbs(config.truth_db, config.test_db)
 
     click.secho("OK", fg="green")
+    return
+
+
+def transform_conn_string(conn_string):
+    """ Transforms any valid connection string passed in to a dict and
+    returns the dict. If the conn_string is invalid or not supported it
+    echos that to stdout and exits the cli.
+
+    Ex:
+        'dbname=test user=postgres password=secret' ->
+            {'password': 'secret', 'user': 'postgres', 'dbname': 'test'}
+
+        "postgresql://someone@example.com/somedb?connect_timeout=10" ->
+            {'host': 'example.com', 'user': 'someone', 'dbname': 'somedb', 'connect_timeout': '10'}
+    """
+    try:
+        conn_dict = parse_dsn(conn_string)
+    except ProgrammingError:
+        message = "Invalid connection string: {}. Exiting.".format(conn_string)
+        click.secho(message, fg="red")
+        sys.exit(1)
+
+    return conn_dict
+
+
+def prompt_for_conn_strings():
+    """ Prompts user to put in connection strings. """
+    click.echo("Please input the needed connection strings.")
+    config.truth_db_conn_string = click.prompt("Database to consider TRUTH: ")
+    config.test_db_conn_string = click.prompt("Database to consider TEST: ")
     return
 
 
@@ -59,26 +91,6 @@ def print_welcome_text():
     output += '\n'
     output += click.style('*' * 80, fg="cyan")
     click.echo(output)
-    return
-
-
-def check_for_connection_strings():
-    """ Checks to see if the user passed in connection strings.
-    Prompts for connection strings if they do not exist.
-    """
-    truth_conn_str = config.truth_db_conn_string
-    test_conn_str = config.test_db_conn_string
-    if not all([truth_conn_str, test_conn_str]):
-        prompt_for_conn_strings()
-
-    return
-
-
-def prompt_for_conn_strings():
-    """ Prompts user to put in connection strings. """
-    click.echo("Please input the needed connection strings. Without surrounding quotes.")
-    config.truth_db_conn_string = click.prompt("Database to consider TRUTH: ")
-    config.test_db_conn_string = click.prompt("Database to consider TEST: ")
     return
 
 
