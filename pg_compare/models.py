@@ -9,6 +9,7 @@ considers truth and another to test against it. Used to determine that both
 databases are the same.
 
 """
+import sys
 from collections import namedtuple
 from contextlib import contextmanager
 
@@ -21,8 +22,8 @@ Table = namedtuple("Table", "name rowcount columns primary_key primary_key_type"
 
 
 class PGDetails(object):
-    def __init__(self, conn_string):
-        self.conn_string = conn_string
+    def __init__(self, **kwargs):
+        self.conn_kwargs = kwargs
         self.conn = None
         self.cur = None
         self._table_details = None
@@ -99,7 +100,8 @@ class PGDetails(object):
         """ Returns psycopg2 connection. _get_cursor() should
         be used instead.
         """
-        return psycopg2.connect(self.conn_string)
+        return psycopg2.connect(**self.conn_kwargs)
+
 
     def _get_cursor(self):
         """ Get the psycopg2 connection and return the cursor
