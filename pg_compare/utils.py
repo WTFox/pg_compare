@@ -86,12 +86,10 @@ def prompt_for_conn_strings():
 
 def print_welcome_text():
     """ Outputs welcome text """
-    output = click.style('*' * 80, fg="cyan")
-    output += '\n\t\t\t'
+    output = '\n\t\t\t'
     output += click.style("=== PG-COMPARE ===\n\n", fg="yellow", bold=True)
-    output += click.style(TITLE_TEXT, fg="cyan")
+    output += click.style(TITLE_TEXT)
     output += '\n'
-    output += click.style('*' * 80, fg="cyan")
     click.echo(output)
 
     print_info_about_databases()

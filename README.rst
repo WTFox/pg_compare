@@ -103,12 +103,12 @@ You can specify additional environment variables to modify the behavior of pg-co
 To disable the spinner (disabled by default on windows)
 ::
 
-    PG_NO_SPIN="false"
+    PG_NO_SPIN=1
 
 To disable async threading
 ::
 
-    PG_NO_SPIN="true"
+    PG_NO_ASYNC=1
 
 
 Built With
@@ -128,4 +128,4 @@ Authors
 .. _psycopg2: https://maven.apache.org/
 .. _wtfox: https://github.com/wtfox
 .. _colorama: https://pypi.python.org/pypi/colorama
-.. _tabulate: https://github.com/gregbanks/python-tabulate
+.. _python-tabulate: https://github.com/gregbanks/python-tabulate
