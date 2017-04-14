@@ -32,7 +32,7 @@ in two databases.
 """
 
 
-if PG_NO_SPIN:
+if PG_NO_SPIN or PG_NO_ASYNC:
     @contextlib.contextmanager
     def spinner():
         yield
@@ -104,7 +104,6 @@ def print_info_about_databases():
     for k, v in config.truth_db_config.items():
         output.append((k, v, config.test_db_config[k]))
 
-    click.echo('\n')
     click.echo(tabulate(output, headers=['', 'Truth Database', 'Test Database'], tablefmt="simple"))
     click.echo('\n')
     return

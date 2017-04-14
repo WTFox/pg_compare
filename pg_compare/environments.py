@@ -14,11 +14,11 @@ import os
 
 
 # Disable spinner
-PG_NO_SPIN = os.environ.get('PG_NO_SPIN')
+PG_NO_SPIN = os.environ.get('PGCOMPARE_NO_SPIN')
 
 # Disable concurrency
-PG_NO_ASYNC = os.environ.get('PG_NO_ASYNC')
+PG_NO_ASYNC = os.environ.get('PGCOMPARE_NO_ASYNC')
 
-# Disable stuff on windows.
+# Disable fun stuff on windows.
 if os.name == 'nt':
     PG_NO_SPIN = True
