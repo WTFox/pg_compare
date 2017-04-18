@@ -134,6 +134,7 @@ Built With
 ~~~~~~~~~~
 
 -  `click`_ - The cli framework used
+-  `click_log`_ - For click logging
 -  `psycopg2`_ - For postgres
 -  `colorama`_ - For colors
 -  `python-tabulate`_ - For tables
@@ -148,3 +149,4 @@ Authors
 .. _wtfox: https://github.com/wtfox
 .. _colorama: https://pypi.python.org/pypi/colorama
 .. _python-tabulate: https://github.com/gregbanks/python-tabulate
+.. _click_log: https://github.com/click-contrib/click-log
