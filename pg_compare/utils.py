@@ -101,8 +101,15 @@ def print_info_about_databases():
     from tabulate import tabulate
 
     output = []
+    displayed_keys = []
     for k, v in config.truth_db_config.items():
-        output.append((k, v, config.test_db_config[k]))
+        output.append((k, v, config.test_db_config.get(k, '')))
+        displayed_keys.append(k)
+
+    for k, v in config.test_db_config.items():
+        if k not in displayed_keys:
+            output.append((k, config.truth_db_config.get(k, ''), v))
+            displayed_keys.append(k)
 
     click.echo(tabulate(output, headers=['', 'Truth Database', 'Test Database'], tablefmt="simple"))
     click.echo('\n')
