@@ -30,12 +30,15 @@ config.available_tests = compare_functions.available_tests()
               help="Select specific comparisons to run.")
 @click.option('-o', '--outfile', type=click.Path(writable=True, dir_okay=False),
               help="Specify a csv file to be created for failed comparisons.")
-def cli(truthdb, testdb, everything, select, outfile):
+@click.option('-d', '--debug', is_flag=True,
+              help="Show a table of database connection info.")
+def cli(truthdb, testdb, everything, select, outfile, debug):
     """ This is used to compare two databases. Takes two connection strings. One it
     considers truth and another to test against it. Used to determine the difference
     in two databases.
     """
     config.outfile = outfile
+    config.show_debug = debug
     if not all([truthdb, testdb]):
         prompt_for_conn_strings()
 

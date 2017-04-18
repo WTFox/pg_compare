@@ -93,7 +93,9 @@ def print_welcome_text():
     output += '\n'
     click.echo(output)
 
-    print_info_about_databases()
+    if config.show_debug:
+        print_info_about_databases()
+
     return
 
 
