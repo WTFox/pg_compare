@@ -40,7 +40,9 @@ To run it
                                       Select specific comparisons to run.
       -o, --outfile PATH              Specify a csv file to be created for failed
                                       comparisons.
+      -d, --debug                     Show a table of database connection info.
       --help                          Show this message and exit.
+
 
 ::
 
