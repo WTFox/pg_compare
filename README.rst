@@ -24,7 +24,7 @@ To run it
 
 ::
 
-    (pg-compare) ➜  pg_compare git:(master) pg-compare --help
+    $ pg-compare --help
     Usage: pg-compare [OPTIONS]
 
       This is used to compare two databases. Takes two connection strings. One
@@ -44,15 +44,13 @@ To run it
 
 ::
 
-    pg-compare -a "host='scranton1' dbname='manager_db' user='mscott' password='improv1!'" -b "host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'"
-    ********************************************************************************
+    $ pg-compare -a "host='scranton1' dbname='manager_db' user='mscott' password='improv1!'" -b "postgresql://dshrute:BeetsBSG!@scranton1:5432/manager_db"
                             === PG-COMPARE ===
 
     This is used to compare two databases. Takes two connection strings. One it
     considers truth and another to test against it. Used to determine the difference
     in two databases.
 
-    ********************************************************************************
     Retrieving details for all tables. This could take awhile... OK
     Comparing catalogs... OK
     Comparing columns... OK
@@ -63,15 +61,13 @@ To run it
 
 ::
 
-    pg-compare -s catalogs -s columns
-    ********************************************************************************
+    $ pg-compare -s catalogs -s columns
                             === PG-COMPARE ===
 
     This is used to compare two databases. Takes two connection strings. One it
     considers truth and another to test against it. Used to determine the difference
     in two databases.
 
-    ********************************************************************************
     Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
     Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
     Retrieving details for all tables. This could take awhile... OK
@@ -80,17 +76,38 @@ To run it
 
 ::
 
-    pg-compare -s catalogs -s columns -o "path/to/file.csv"
-    ********************************************************************************
+    $ pg-compare -s catalogs -s columns -o "path/to/file.csv"
                             === PG-COMPARE ===
 
     This is used to compare two databases. Takes two connection strings. One it
     considers truth and another to test against it. Used to determine the difference
     in two databases.
 
-    ********************************************************************************
     Truth connection string: host='scranton1' dbname='manager_db' user='mscott' password='improv1!'
     Test connection string: host='scranton2' dbname='manage_db' user='dshrute' password='beetsBSG'
+    Retrieving details for all tables. This could take awhile... OK
+    Comparing catalogs... OK
+    Comparing columns... FAIL
+    Building report... OK
+
+
+::
+
+    $ pg-compare -a "host='scranton1' dbname='manager_db' user='mscott' password='improv1!'" -b "postgresql://dshrute:BeetsBSG!@scranton1:5432/manager_db"
+                            === PG-COMPARE ===
+
+    This is used to compare two databases. Takes two connection strings. One it
+    considers truth and another to test against it. Used to determine the difference
+    in two databases.
+
+              Truth Database      Test Database
+    --------  ------------------  -----------------
+    host      scranton1           scranton1
+    password  improv1!            BeetsBSG!
+    user      mscott              dshrute
+    dbname    manager_db          manager_db
+    port                          5432
+
     Retrieving details for all tables. This could take awhile... OK
     Comparing catalogs... OK
     Comparing columns... FAIL
@@ -103,12 +120,12 @@ You can specify additional environment variables to modify the behavior of pg-co
 To disable the spinner (disabled by default on windows)
 ::
 
-    PG_NO_SPIN=1
+    PGCOMPARE_NO_SPIN=1
 
 To disable async threading
 ::
 
-    PG_NO_ASYNC=1
+    PGCOMPARE_NO_ASYNC=1
 
 
 Built With
