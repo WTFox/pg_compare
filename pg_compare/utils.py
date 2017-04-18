@@ -119,17 +119,30 @@ def print_info_about_databases():
 def load_table_details_for_both_dbs(*databases):
     """ Load all needed data from both databases into memory. """
 
-    if PG_NO_ASYNC:
+    if PGCOMPARE_NO_ASYNC:
         for db in databases:
             db.get_details_for_tables()
-    else:
-        threads = []
-        for db in databases:
-            process = threading.Thread(target=db.get_details_for_tables)
-            process.start()
-            threads.append(process)
 
-        for process in threads:
-            process.join()
+        return
+
+    threads = []
+    stop_event = threading.Event()
+    initial_active_threads = threading.active_count()
+    for db in databases:
+        process = threading.Thread(target=db.get_details_for_tables)
+        process.start()
+        threads.append(process)
+
+    while threading.active_count() > initial_active_threads:
+        try:
+            time.sleep(0.1)
+        except (KeyboardInterrupt, SystemExit):
+            stop_event.set()
+
+        if stop_event.is_set():
+            for db in databases:
+                db._close_all()
+
+            sys.exit(1)
 
     return
