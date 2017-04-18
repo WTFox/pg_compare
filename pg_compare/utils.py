@@ -14,13 +14,14 @@ in two databases.
 import contextlib
 import sys
 import threading
+import time
 
 import click
 from psycopg2 import ProgrammingError
 from psycopg2.extensions import parse_dsn
 
 from . import config
-from .environments import PG_NO_SPIN, PG_NO_ASYNC
+from .environments import PGCOMPARE_NO_SPIN, PGCOMPARE_NO_ASYNC
 from .models import PGDetails
 from .vendor.blindspin import spinner
 
@@ -32,7 +33,7 @@ in two databases.
 """
 
 
-if PG_NO_SPIN or PG_NO_ASYNC:
+if PGCOMPARE_NO_SPIN or PGCOMPARE_NO_ASYNC:
     @contextlib.contextmanager
     def spinner():
         yield
