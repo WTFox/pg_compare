@@ -44,10 +44,9 @@ class ErrorReport(object):
         if needed.
         """
         if len(self.errors) and config.outfile:
-            click.echo("Building report...", nl="")
+            config.log.info("Building report...")
             self._create_file(config.outfile)
             self._compile_report()
-            click.secho("OK", fg="green")
 
         return
 

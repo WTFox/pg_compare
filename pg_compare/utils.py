@@ -46,12 +46,15 @@ def initialize():
     config.truth_db = PGDetails(**config.truth_db_config)
     config.test_db = PGDetails(**config.test_db_config)
 
-    message = "Retrieving details for all tables. This could take awhile... "
-    click.secho(message, fg="yellow", nl="")
+    message = click.style("Retrieving details for all tables. This could take awhile... ", fg="yellow")
+    config.log.info(message)
     with spinner():
         load_table_details_for_both_dbs(config.truth_db, config.test_db)
 
-    click.secho("OK", fg="green")
+    # Clearing that status
+    sys.stdout.write("\b")
+    sys.stdout.flush()
+
     return
 
 
@@ -71,7 +74,7 @@ def transform_conn_string(conn_string):
         conn_dict = parse_dsn(conn_string)
     except ProgrammingError:
         message = "Invalid connection string: {}. Exiting.".format(conn_string)
-        click.secho(message, fg="red")
+        config.log.error(message)
         sys.exit(1)
 
     return conn_dict
@@ -79,7 +82,6 @@ def transform_conn_string(conn_string):
 
 def prompt_for_conn_strings():
     """ Prompts user to put in connection strings. """
-    click.echo("Please input the needed connection strings.")
     config.truth_db_conn_string = click.prompt("Database to consider TRUTH: ")
     config.test_db_conn_string = click.prompt("Database to consider TEST: ")
     return
@@ -91,11 +93,9 @@ def print_welcome_text():
     output += click.style("=== PG-COMPARE ===\n\n", fg="yellow", bold=True)
     output += click.style(TITLE_TEXT)
     output += '\n'
-    click.echo(output)
+    config.log.info(output)
 
-    if config.show_debug:
-        print_info_about_databases()
-
+    print_info_about_databases()
     return
 
 
@@ -114,8 +114,8 @@ def print_info_about_databases():
             output.append((k, config.truth_db_config.get(k, ''), v))
             displayed_keys.append(k)
 
-    click.echo(tabulate(output, headers=['', 'Truth Database', 'Test Database'], tablefmt="simple"))
-    click.echo('\n')
+    config.log.info(tabulate(output, headers=['', 'Truth Database', 'Test Database'], tablefmt="simple"))
+    config.log.info('\n')
     return
 
 

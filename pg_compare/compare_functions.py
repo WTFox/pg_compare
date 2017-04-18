@@ -49,17 +49,21 @@ def run(test_names):
         pgcompare_pks will be triggered.
     """
     funcs = dict(inspect.getmembers(sys.modules[__name__], inspect.isfunction))
+    failed_tests = []
     for test_name in test_names:
-        click.echo("Comparing {}... ".format(test_name), nl="")
-
         func_name = "pgcompare_{}".format(test_name)
         if funcs.get(func_name)():
-            click.secho("OK", fg="green")
+            config.log.info("{} comparison passed.".format(test_name.title()))
         else:
-            click.secho("FAIL", fg="red")
+            config.log.warning("{} comparison failed.".format(test_name.title()))
+            failed_tests.append(test_name)
 
     error_report.build_report()
-    return
+    if failed_tests:
+        config.log.warning("{}".format(', '.join(failed_tests)))
+        return False
+    else:
+        return True
 
 
 def pgcompare_catalogs():
