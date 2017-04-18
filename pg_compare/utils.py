@@ -149,3 +149,12 @@ def load_table_details_for_both_dbs(*databases):
             sys.exit(1)
 
     return
+
+
+def calculate_elapsed_time():
+    """ Calculates time the script took to execute. """
+    end_time = time.time()
+    seconds = end_time - config.start_time
+    m, s = divmod(seconds, 60)
+    h, m = divmod(m, 60)
+    return "%d:%02d:%02d" % (h, m, s)

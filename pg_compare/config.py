@@ -10,6 +10,8 @@ considers truth and another to test against it. Used to determine that both
 databases are the same.
 
 """
+import time
+
 from models import AttributeContainer
 
 
@@ -20,6 +22,7 @@ config.truth_db = None
 config.test_db = None
 config.outfile = None
 config.available_tests = []
+config.start_time = time.time()
 
 
 if __name__ == '__main__':
