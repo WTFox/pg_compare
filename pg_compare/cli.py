@@ -43,9 +43,7 @@ def cli(truthdb, testdb, everything, select, outfile, verbosity):
     in two databases.
     """
     verbosity_mapping = {
-        1: "ERROR",
-        2: "WARNING",
-        3: "INFO"
+        1: "INFO"
     }
     config.log = logging.getLogger('pg-compare')
     config.log.setLevel(verbosity_mapping.get(verbosity, "ERROR"))

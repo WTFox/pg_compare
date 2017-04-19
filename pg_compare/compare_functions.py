@@ -55,12 +55,12 @@ def run(test_names):
         if funcs.get(func_name)():
             config.log.info("{} comparison passed.".format(test_name.title()))
         else:
-            config.log.warning("{} comparison failed.".format(test_name.title()))
+            config.log.info("{} comparison failed.".format(test_name.title()))
             failed_tests.append(test_name)
 
     error_report.build_report()
     if failed_tests:
-        config.log.warning("{}".format(', '.join(failed_tests)))
+        config.log.error("{}".format(', '.join(failed_tests)))
         return False
     else:
         return True
